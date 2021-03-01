@@ -2,9 +2,9 @@
 
 /* Изменяйте только эти 4 переменные */
 constexpr int V0 = 0;
-constexpr int V1 = -1;
+constexpr int V1 = 8;
 constexpr int V2 = 0;
-constexpr int V3 = 0;
+constexpr int V3 = -2;
 
 /*
  * Точка входа с++ программы. Что передается через аргументы?
@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
     std::cout << "Лучшая специальность:" << std::endl;
 
     /* switch statement */
-    switch (V1 + V2 + V3)
+    switch (V1 + V2 + V3) // V1+V2+V3=6 
     {
     case 0:
         std::cout << "Конечно же ";
@@ -69,7 +69,7 @@ int main(int argc, char** argv) {
     const std::string s = (!V3 || V3 == 6) ? "МТЗ" : "БАТЭ";
 
     /* if statement */
-    if (V2 + V3 < 0) {
+    if (V2 + V3 < 0) { // V2+V3 < 0
 	std::cout << s << " чемпион!" << std::endl;
     } else {
 	std::cout << "Вперед " << s << '!' << std::endl;
