@@ -18,6 +18,6 @@ void set_bit(unsigned * x,
 // Предполагается что 0 <= n <= 31
 void flip_bit(unsigned * x,
               unsigned n) {
-    *x = *x ^ (1 << n);
+    *x = *x ^   ;
 }
 
