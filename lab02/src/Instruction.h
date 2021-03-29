@@ -96,12 +96,12 @@ struct Instruction : public PoolAllocated<Instruction>
     std::optional<CsrIdx> _csr;
     std::optional<Word> _imm;
 
-    Word _src1Val;
-    Word _src2Val;
-    Word _csrVal;
+    Word _src1Val = nullptr;
+    Word _src2Val = nullptr;
+    Word _csrVal = nullptr;
     Word _data = 0xdeadbeaf;
     Word _addr = 0xdeadbeaf;
-    Word _nextIp = 0xdeadbeaf;
+    Word _nextIp = 0xdeadbeaf;  
 };
 
 using InstructionPtr = std::unique_ptr<Instruction>;
