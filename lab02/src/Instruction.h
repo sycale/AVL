@@ -1,4 +1,3 @@
-
 #ifndef RISCV_SIM_INSTRUCTION_H
 #define RISCV_SIM_INSTRUCTION_H
 
@@ -96,12 +95,12 @@ struct Instruction : public PoolAllocated<Instruction>
     std::optional<CsrIdx> _csr;
     std::optional<Word> _imm;
 
-    Word _src1Val = nullptr;
-    Word _src2Val = nullptr;
-    Word _csrVal = nullptr;
+    Word _src1Val;
+    Word _src2Val;
+    Word _csrVal;
     Word _data = 0xdeadbeaf;
     Word _addr = 0xdeadbeaf;
-    Word _nextIp = 0xdeadbeaf;  
+    Word _nextIp = 0xdeadbeaf;
 };
 
 using InstructionPtr = std::unique_ptr<Instruction>;

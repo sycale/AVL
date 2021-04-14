@@ -74,6 +74,14 @@ TEST_SUITE("Executor"){
             CHECK_EQ(instruction->_data, (int)SRCVAL1 < (int)SRCVAL2);
         }
 
+        SUBCASE("CUSTOM__SLT") {
+            const Word SLT = 0b00000000000101101010010110110011;
+            
+            auto instruction = _decoder.Decode(SLT);
+            testR(instruction, _exe);
+            CHECK_EQ(instruction->_data, (int)SRCVAL1 < (int)SRCVAL2);        
+        }
+
         SUBCASE("SLTU"){
             auto instruction = _decoder.Decode(SLTU);
             testR(instruction, _exe);

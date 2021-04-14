@@ -10,6 +10,8 @@ void testR(InstructionPtr &instruction);
 void testU(InstructionPtr &instruction);
 void testUJ(InstructionPtr &instruction);
 void testAlu(InstructionPtr &instruction);
+void testBitAlu(InstructionPtr &instruction);
+void testBitR(InstructionPtr &instruction);
 
 TEST_SUITE("Decoder"){
     Decoder _decoder;
@@ -65,6 +67,14 @@ TEST_SUITE("Decoder"){
         SUBCASE("SLT"){
             auto instruction = _decoder.Decode(SLT);
             testR(instruction);
+            CHECK(instruction->_aluFunc == AluFunc::Slt);
+        }
+
+        SUBCASE("CUSTOM_SLT") {
+            //0000000_00001_01101_010_01011_0110011
+            const Word SLT = 0b00000000000101101010010110110011;    
+            auto instruction = _decoder.Decode(SLT);
+            testBitR(instruction);
             CHECK(instruction->_aluFunc == AluFunc::Slt);
         }
 
@@ -222,7 +232,6 @@ TEST_SUITE("Decoder"){
         }
     }
 
-    /* YOUR CODE HERE */
 }
 
 void testBranch(InstructionPtr &instruction){
@@ -235,7 +244,11 @@ void testBranch(InstructionPtr &instruction){
 void testR(InstructionPtr &instruction){
     testAlu(instruction);
     CHECK(instruction->_src2.value() == 3);
+}
 
+void testBitR(InstructionPtr &instruction){
+    testBitAlu(instruction);
+    CHECK(instruction->_src2.value() == 1);
 }
 
 void testI(InstructionPtr &instruction){
@@ -256,5 +269,11 @@ void testUJ(InstructionPtr &instruction){
 void testAlu(InstructionPtr &instruction){
     CHECK(instruction->_src1.value() == 1);
     CHECK(instruction->_dst.value() == 15);
+    CHECK(instruction->_type == IType::Alu);
+}
+
+void testBitAlu(InstructionPtr &instruction) {
+    CHECK(instruction->_src1.value() == 13);
+    CHECK(instruction->_dst.value() == 11);
     CHECK(instruction->_type == IType::Alu);
 }
