@@ -10,114 +10,185 @@ public:
     void Execute(InstructionPtr& instr, Word ip)
     {
         Word result;
-        Word first_operand = instr->_src1Val;
-        Word second_operand;
-        
+
+        Word f_operand = instr->_src1Val;
+
+        Word s_operand;
+
         if (instr->_imm)
         {
-            second_operand = instr->_imm.value();
+            s_operand = instr->_imm.value();
         }
         else
         {
-            second_operand = instr->_src2Val;
+            s_operand = instr->_src2Val;
         }
 
         switch(instr->_aluFunc)
         {
             case AluFunc::Add:
-                result = first_operand + second_operand;
+
+                result = f_operand + s_operand;
+
                 break;
+
             case AluFunc::Sub:
-                result = first_operand - second_operand;
+
+                result = f_operand - s_operand;
+
                 break;
+
             case AluFunc::And:
-                result = first_operand & second_operand;
+
+                result = f_operand & s_operand;
+
                 break;
+
             case AluFunc::Or:
-                result = first_operand | second_operand;
+
+                result = f_operand | s_operand;
+
                 break;
+
             case AluFunc::Xor:
-                result = first_operand ^ second_operand;
+
+                result = f_operand ^ s_operand;
+
                 break;
+
             case AluFunc::Slt:
-                result = (int)first_operand < (int)second_operand;
+
+                result = (int)f_operand < (int)s_operand;
+
                 break;
+
             case AluFunc::Sltu:
-                result = first_operand < second_operand;
+
+                result = f_operand < s_operand;
+
                 break;
+
             case AluFunc::Sll:
-                result = first_operand << (second_operand % 32);
+
+                result = f_operand << (s_operand % 32);
+
                 break;
+
             case AluFunc::Srl:
-                result = first_operand >> (second_operand % 32);
+
+                result = f_operand >> (s_operand % 32);
+
                 break;
+
             case AluFunc::Sra:
-                result = (int)first_operand >> (second_operand % 32);
+
+                result = (int)f_operand >> (s_operand % 32);
+
                 break;
         }
 
         switch(instr->_type)
         {
             case IType::Csrr:
+
                 instr->_data = instr->_csrVal;
+
                 break;
+
             case IType::Csrw:
+
                 instr->_data = instr->_src1Val;
+
                 break;
+
             case IType::St:
+
                 instr->_data = instr->_src2Val;
+
                 instr->_addr = result;
+
                 break;
+
             case IType::J:
+
             case IType::Jr:
+
                 instr->_data = ip + 4;
+
                 break;
+
             case IType::Auipc:
+
                 instr->_data = ip + instr->_imm.value();
+
                 break;
+
             case IType::Ld:
+
                 instr->_addr = result;
+
                 break;
+
             default:
+
                 instr->_data = result;
+
                 break;
         }
 
-        bool branch = false;
+        bool br = false;
 
         switch (instr->_brFunc)
         {
             case BrFunc::Eq:
-                branch = instr->_src1Val == instr->_src2Val;
+
+                br = instr->_src1Val == instr->_src2Val;
+
                 break;
+
             case BrFunc::Neq:
-                branch = instr->_src1Val != instr->_src2Val;
+
+                br = instr->_src1Val != instr->_src2Val;
+
                 break;
+
             case BrFunc::Lt:
-                branch = (int)instr->_src1Val < (int)instr->_src2Val;
+
+                br = (int)instr->_src1Val < (int)instr->_src2Val;
+
                 break;
+
             case BrFunc::Ltu:
-                branch = instr->_src1Val < instr->_src2Val;
+
+                br = instr->_src1Val < instr->_src2Val;
+
                 break;
+
             case BrFunc::Ge:
-                branch = (int)instr->_src1Val >= (int)instr->_src2Val;
+
+                br = (int)instr->_src1Val >= (int)instr->_src2Val;
+
                 break;
+
             case BrFunc::Geu:
-                branch = instr->_src1Val >= instr->_src2Val;
+
+                br = instr->_src1Val >= instr->_src2Val;
+
                 break;
+
             case BrFunc::AT:
-                branch = true;
+                br = true;
                 break;
             case BrFunc::NT:
-                branch = false;
+                br = false;
                 break;
         }
 
-        if ((instr->_type == IType::Br || instr->_type == IType::J) && branch)
+        if ((instr->_type == IType::Br || instr->_type == IType::J) && br)
         {
             instr->_nextIp = ip + instr->_imm.value();
         }
-        else if (instr->_type == IType::Jr && branch)
+        else if (instr->_type == IType::Jr && br)
         {
             instr->_nextIp = instr->_imm.value() + instr->_src1Val;
         }
